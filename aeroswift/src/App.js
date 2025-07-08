@@ -1,11 +1,10 @@
-// src/App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
-import BookingPage from './pages/BookingPage';
+import BookingPage from './pages/Booking Page.jsx';
 import ConfirmationPage from './pages/ConfirmationPage';
 import DashboardPage from './pages/DashboardPage';
 import AboutPage from './pages/AboutPage';
@@ -46,7 +45,17 @@ function App() {
       arrivalTime: "2025-06-27T17:00:00",
       price: 129,
       availableSeats: 22
-    }
+    },
+    {
+      id: 4,
+      flightNumber: "DC678",
+      origin: "ORDNBI",
+      destination: "MIA",
+      departureTime: "2025-06-26T10:15:00",
+      arrivalTime: "2025-06-26T13:35:00",
+      price: 1489,
+      availableSeats: 45
+    },
   ];
 
   const handleLogin = () => {
