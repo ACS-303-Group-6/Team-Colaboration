@@ -1,85 +1,146 @@
 // src/pages/ConfirmationPage.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaCheck, FaHome, FaSuitcase } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const ConfirmationPage = ({ booking }) => {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString([], { 
-      weekday: 'long', 
-      month: 'long', 
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+const ConfirmationPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [showConfetti, setShowConfetti] = useState(true);
+  
+  const flightId = new URLSearchParams(location.search).get('flightId') || '1';
+  
+  const flightDetails = {
+    airline: 'AeroSwift Airlines',
+    flightNumber: 'AS2023',
+    departure: 'New York (JFK)',
+    arrival: 'Los Angeles (LAX)',
+    date: 'June 15, 2023',
+    departureTime: '08:00 AM',
+    arrivalTime: '11:30 AM',
+    duration: '3h 30m',
+    passenger: 'John Doe',
+    seat: '24A',
+    price: 299,
+    bookingRef: 'AS-BK-7X3D9F'
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden text-center">
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-8">
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
-              <FaCheck className="text-green-600 text-4xl" />
-            </div>
-            <h1 className="text-3xl font-bold mb-2">Booking Confirmed!</h1>
-            <p className="text-xl">Thank you for choosing AeroSwift</p>
+    <div className="confirmation-page">
+      {showConfetti && (
+        <div className="confetti">
+          {[...Array(150)].map((_, i) => (
+            <div 
+              key={i} 
+              className="confetti-piece" 
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                backgroundColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                transform: `rotate(${Math.random() * 360}deg)`
+              }}
+            ></div>
+          ))}
+        </div>
+      )}
+      
+      <div className="container">
+        <div className="confirmation-card">
+          <div className="confirmation-header">
+            <div className="success-icon">✓</div>
+            <h1>Booking Confirmed!</h1>
+            <p>Your flight has been successfully booked. A confirmation email has been sent to your inbox.</p>
           </div>
           
-          <div className="p-8">
-            <div className="mb-8">
-              <p className="text-gray-600 mb-6">
-                Your flight reservation has been successfully confirmed. A confirmation email has been sent to <span className="font-semibold">{booking.email}</span>.
-              </p>
+          <div className="booking-details">
+            <div className="detail-header">
+              <h2>Flight Details</h2>
+              <div className="booking-ref">
+                Booking Reference: <span>{flightDetails.bookingRef}</span>
+              </div>
+            </div>
+            
+            <div className="flight-info">
+              <div className="flight-segment">
+                <div className="airport">
+                  <div className="time">{flightDetails.departureTime}</div>
+                  <div className="code">{flightDetails.departure}</div>
+                </div>
+                
+                <div className="flight-duration">
+                  <div className="duration">{flightDetails.duration}</div>
+                  <div className="divider">
+                    <div className="line"></div>
+                    <div className="plane">✈️</div>
+                  </div>
+                  <div className="non-stop">Non-stop</div>
+                </div>
+                
+                <div className="airport">
+                  <div className="time">{flightDetails.arrivalTime}</div>
+                  <div className="code">{flightDetails.arrival}</div>
+                </div>
+              </div>
               
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-left">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <p className="text-sm text-gray-600">Booking Reference</p>
-                    <p className="font-bold text-lg">{booking.id}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Status</p>
-                    <p className="font-bold text-green-600">Confirmed</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Flight</p>
-                    <p className="font-bold">{booking.flight.flightNumber} ({booking.flight.origin} → {booking.flight.destination})</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Passengers</p>
-                    <p className="font-bold">{booking.seats} {booking.seats === 1 ? 'Passenger' : 'Passengers'}</p>
-                  </div>
+              <div className="flight-meta">
+                <div className="meta-item">
+                  <div className="meta-label">Date</div>
+                  <div className="meta-value">{flightDetails.date}</div>
                 </div>
                 
-                <div className="border-t border-green-200 pt-4 mt-4">
-                  <p className="text-sm text-gray-600">Departure</p>
-                  <p className="font-bold">{formatDate(booking.flight.departureTime)}</p>
+                <div className="meta-item">
+                  <div className="meta-label">Flight</div>
+                  <div className="meta-value">{flightDetails.flightNumber}</div>
                 </div>
                 
-                <div className="border-t border-green-200 pt-4 mt-4">
-                  <p className="text-sm text-gray-600">Total Amount</p>
-                  <p className="font-bold text-2xl text-green-700">${booking.totalPrice.toFixed(2)}</p>
+                <div className="meta-item">
+                  <div className="meta-label">Passenger</div>
+                  <div className="meta-value">{flightDetails.passenger}</div>
+                </div>
+                
+                <div className="meta-item">
+                  <div className="meta-label">Seat</div>
+                  <div className="meta-value">{flightDetails.seat}</div>
                 </div>
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link 
-                to="/" 
-                className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 flex items-center justify-center"
-              >
-                <FaHome className="mr-2" /> Back to Home
-              </Link>
-              <Link 
-                to="/dashboard" 
-                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-900 flex items-center justify-center"
-              >
-                <FaSuitcase className="mr-2" /> View My Bookings
-              </Link>
+            <div className="price-summary">
+              <div className="summary-item">
+                <div>Flight</div>
+                <div>${flightDetails.price}</div>
+              </div>
+              <div className="summary-item">
+                <div>Taxes & Fees</div>
+                <div>$42.50</div>
+              </div>
+              <div className="summary-total">
+                <div>Total</div>
+                <div>${flightDetails.price + 42.50}</div>
+              </div>
             </div>
+          </div>
+          
+          <div className="confirmation-actions">
+            <button 
+              className="btn btn-outline"
+              onClick={() => navigate('/')}
+            >
+              Back to Home
+            </button>
+            <button 
+              className="btn btn-primary"
+              onClick={() => navigate('/booking')}
+            >
+              Book Another Flight
+            </button>
           </div>
         </div>
       </div>
