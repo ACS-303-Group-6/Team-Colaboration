@@ -6,12 +6,13 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   
-  const navLinks = [
-    { title: 'Home', path: '/' },
-    { title: 'Book Flight', path: '/booking' },
-    { title: 'My Bookings', path: '/bookings' },
-    { title: 'Support', path: '/support' },
-  ];
+  // Update navLinks
+const navLinks = [
+  { title: 'Home', path: '/' },
+  { title: 'Book Flight', path: '/booking' },
+  { title: 'My Bookings', path: '/dashboard' }, // Updated
+  { title: 'Support', path: '/support' },
+];
 
   return (
     <header className="navbar">
