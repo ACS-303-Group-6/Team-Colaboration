@@ -7,8 +7,7 @@ import FlightCard from '../components/FlightCard';
 
 const HomePage = ({ flights = [] }) => {  // Added default value
   const featuredFlights = flights.slice(0, 3);
-  
-  // ... rest of your component
+ 
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
