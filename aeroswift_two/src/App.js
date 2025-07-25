@@ -1,46 +1,33 @@
-// src/App.jsx
+// src/App.js
 import React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles'; // Fix: Removed duplicate import
-import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import BookingPage from './pages/BookingPage';
+import SearchPage from './pages/SearchPage';
+import ConfirmationPage from './pages/ConfirmationPage';
 import Footer from './components/Footer';
-import SearchPage from './pages/SearchPage'; // Changed to SearchPage
-import ConfirmationPage from './pages/ConfirmationPage'; // Changed to ConfirmationPage
-
-// Create theme instance
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <div className="app-container">
-          <Navbar />
-          <main className="content">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/booking" element={<BookingPage />} />
-              <Route path="/search-results" element={<SearchPage />} /> {/* Fixed */}
-              <Route path="/confirmation" element={<ConfirmationPage />} /> {/* Fixed */}
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <div className="app-container">
+        <Navbar />
+        <main className="content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/search-results" element={<SearchPage />} />
+            <Route path="/confirmation" element={<ConfirmationPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
