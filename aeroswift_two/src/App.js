@@ -9,13 +9,17 @@ import ConfirmationPage from './pages/ConfirmationPage';
 import Footer from './components/Footer';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import SupportPage from './pages/SupportPage';
+import DashboardPage from './pages/DashboardPage';
+import AboutPage from './pages/AboutPage';
+import './index.css';
 
 function App() {
   return (
     <Router>
-      <div className="app-container">
+      <div className="app-container min-h-screen flex flex-col">
         <Navbar />
-        <main className="content">
+        <main className="content flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
@@ -23,6 +27,9 @@ function App() {
             <Route path="/confirmation" element={<ConfirmationPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/support" element={<SupportPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </main>
         <Footer />
