@@ -16,7 +16,7 @@ const HomePage = ({ flights = [] }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="bg-light">
       <HeroSection onSearchSubmit={handleSearchSubmit} />
       <FeaturedFlightsSection flights={flights} />
       <FeaturesSection />

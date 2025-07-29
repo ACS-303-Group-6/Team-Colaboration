@@ -10,10 +10,7 @@ const CtaSection = () => {
       <p className="lead mb-5 max-w-3xl mx-auto opacity-90 animate-fade-in-up">
         Join millions of travelers who trust AeroSwift for their flights.
       </p>
-      <Link
-        to="/search"
-        className="btn btn-light btn-lg rounded-pill shadow-lg hover-scale animate-bounce-once"
-      >
+      <Link to="/search" className="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold">
         Find Your Flight
         <FaPlane className="ms-3 fs-4" />
       </Link>

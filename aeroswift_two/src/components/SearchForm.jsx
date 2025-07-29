@@ -1,105 +1,51 @@
 // src/components/SearchForm.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt, FaSearch } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+// Note: You may need to run: npm install react-datepicker
 
-const SearchForm = () => {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useState({
-    origin: '',
-    destination: '',
-    date: '',
-    passengers: 1
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSearchParams({
-      ...searchParams,
-      [name]: value
-    });
-  };
+const SearchForm = ({ onSubmit, initialData = {} }) => {
+  const [from, setFrom] = useState(initialData.from || '');
+  const [to, setTo] = useState(initialData.to || '');
+  const [departureDate, setDepartureDate] = useState(() => initialData.departureDate ? new Date(initialData.departureDate) : new Date());
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/search');
+    onSubmit({ from, to, departureDate: departureDate.toISOString().split('T')[0] });
   };
 
-  // Set default date to tomorrow
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const defaultDate = tomorrow.toISOString().split('T')[0];
-
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">Find Your Perfect Flight</h2>
-      
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">From</label>
-          <input
-            type="text"
-            name="origin"
-            value={searchParams.origin}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="City or airport"
-            required
-          />
+    <form onSubmit={handleSubmit}>
+      <div className="row g-3 align-items-end">
+        <div className="col-md">
+          <label htmlFor="from" className="form-label fw-bold text-start d-block">From</label>
+          <div className="input-group">
+            <span className="input-group-text bg-light border-end-0"><FaPlaneDeparture /></span>
+            <input type="text" id="from" className="form-control form-control-lg border-start-0" placeholder="e.g., New York" value={from} onChange={(e) => setFrom(e.target.value)} required />
+          </div>
         </div>
-        
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
-          <input
-            type="text"
-            name="destination"
-            value={searchParams.destination}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="City or airport"
-            required
-          />
+        <div className="col-md">
+          <label htmlFor="to" className="form-label fw-bold text-start d-block">To</label>
+          <div className="input-group">
+            <span className="input-group-text bg-light border-end-0"><FaPlaneArrival /></span>
+            <input type="text" id="to" className="form-control form-control-lg border-start-0" placeholder="e.g., London" value={to} onChange={(e) => setTo(e.target.value)} required />
+          </div>
         </div>
-        
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Departure</label>
-          <input
-            type="date"
-            name="date"
-            value={searchParams.date || defaultDate}
-            onChange={handleChange}
-            min={defaultDate}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
+        <div className="col-md">
+          <label htmlFor="departureDate" className="form-label fw-bold text-start d-block">Departure</label>
+          <div className="input-group">
+            <span className="input-group-text bg-light border-end-0"><FaCalendarAlt /></span>
+            <DatePicker id="departureDate" selected={departureDate} onChange={(date) => setDepartureDate(date)} className="form-control form-control-lg border-start-0" dateFormat="MMMM d, yyyy" minDate={new Date()} />
+          </div>
         </div>
-        
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Passengers</label>
-          <select
-            name="passengers"
-            value={searchParams.passengers}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
-              <option key={num} value={num}>{num} {num === 1 ? 'Passenger' : 'Passengers'}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div className="md:col-span-4 flex justify-center mt-4">
-          <button
-            type="submit"
-            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-blue-900 transition-all flex items-center"
-          >
-            <span>Search Flights</span>
-            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+        <div className="col-md-auto">
+          <button type="submit" className="btn btn-search-hero w-100">
+            <FaSearch className="icon" />
+            <span>Search</span>
           </button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 

@@ -5,6 +5,7 @@ import HomePage from 'pages/HomePage';
 import SearchPage from 'pages/SearchPage';
 import BookingPage from 'pages/BookingPage';
 import ContactPage from 'pages/ContactPage';
+import AboutPage from 'pages/AboutPage';
 import Layout from 'components/Layout';
 
 // Mock flight data to be passed down as props
@@ -24,6 +25,7 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="booking" element={<BookingPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="about" element={<AboutPage />} />
           <Route path="search-results" element={<SearchPage />} />
         </Route>
       </Routes>

@@ -28,7 +28,7 @@ const FeaturedFlightsSection = ({ flights = [] }) => {
         <p className="text-center text-secondary fs-5">No featured flights available at the moment. Please use the search to find flights!</p>
       )}
       <div className="text-center mt-5">
-        <Link to="/search" className="btn btn-primary btn-lg rounded-pill shadow-lg hover-scale">
+      <Link to="/search" className="btn btn-outline-primary btn-lg rounded-pill px-5 py-3 fw-bold">
           View All Flights
           <FaPlane className="ms-2" />
         </Link>
