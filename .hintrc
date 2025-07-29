@@ -16,12 +16,23 @@
           "scrollbar-width"
         ]
       }
+    ],
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "meta[name=theme-color]"
+        ]
+      }
     ]
   },
   "browserslist": [
     "defaults",
     "not ie 11",
     "not ios_saf <= 18",
-    "not safari <= 18"
+    "not safari <= 18",
+    "not and_ff <= 130",
+    "not firefox <= 130",
+    "not opera <= 114"
   ]
 }

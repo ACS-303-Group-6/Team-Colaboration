@@ -1,62 +1,29 @@
 // src/components/Navbar.jsx
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { FaPlaneDeparture } from 'react-icons/fa';
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
-  
-  // Update navLinks
-const navLinks = [
-  { title: 'Home', path: '/' },
-  { title: 'Book Flight', path: '/booking' },
-  { title: 'My Bookings', path: '/dashboard' }, // Updated
-  { title: 'Support', path: '/support' },
-];
-
   return (
-    <header className="navbar">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
       <div className="container">
-        <div className="navbar-brand">
-          <Link to="/" className="logo">
-            <div className="logo-icon">✈️</div>
-            <span>AeroSwift</span>
-          </Link>
-          
-          <button 
-            className="mobile-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <div className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </button>
-        </div>
-        
-        <nav className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}>
-          <ul>
-            {navLinks.map((link) => (
-              <li key={link.path}>
-                <Link 
-                  to={link.path} 
-                  className={location.pathname === link.path ? 'active' : ''}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.title}
-                </Link>
-              </li>
-            ))}
+        <Link className="navbar-brand d-flex align-items-center" to="/">
+          <FaPlaneDeparture className="me-2 text-primary" />
+          <span className="fw-bold">AeroSwift</span>
+        </Link>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item"><NavLink className="nav-link" to="/" end>Home</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/search">Search Flights</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/booking">My Bookings</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/contact">Contact</NavLink></li>
           </ul>
-          
-          <div className="nav-actions">
-            <Link to="/login" className="btn btn-outline">Sign In</Link>
-            <Link to="/booking" className="btn btn-primary">Book Now</Link>
-          </div>
-        </nav>
+        </div>
       </div>
-    </header>
+    </nav>
   );
 };
 
