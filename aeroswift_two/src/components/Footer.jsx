@@ -15,7 +15,7 @@ const Footer = () => {
           <div className="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
             <h5 className="text-uppercase mb-4 fw-bold">Quick Links</h5>
             <p><Link to="/about" className="text-white text-decoration-none">About</Link></p>
-            <p><Link to="/faq" className="text-white text-decoration-none">FAQ</Link></p>
+            <p><Link to="/support#faqAccordion" className="text-white text-decoration-none">FAQ</Link></p>
             <p><Link to="/terms" className="text-white text-decoration-none">Terms of Service</Link></p>
           </div>
           <div className="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">

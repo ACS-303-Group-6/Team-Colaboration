@@ -50,7 +50,7 @@ const LoginPage = () => {
       <div className="auth-container">
         <div className="auth-header">
           <div className="logo">
-            <div className="logo-icon">✈️</div>
+            <div className="logo-icon"></div>
             <span>AeroSwift</span>
           </div>
           <h2>Welcome back!</h2>

@@ -66,7 +66,7 @@ const SignupPage = () => {
       <div className="auth-container">
         <div className="auth-header">
           <div className="logo">
-            <div className="logo-icon">✈️</div>
+            <div className="logo-icon"></div>
             <span>AeroSwift</span>
           </div>
           <h2>Create your account</h2>

@@ -1,6 +1,7 @@
 // src/components/HeroSection.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaDollarSign, FaGlobe, FaHeadset } from 'react-icons/fa';
 import SearchForm from 'components/SearchForm';
 
 const HeroSection = ({ onSearchSubmit }) => {
@@ -13,11 +14,36 @@ const HeroSection = ({ onSearchSubmit }) => {
         <h1 className="display-4 display-md-2 fw-bolder mb-4 animate-fade-in-down">
           Your Journey Starts Here
         </h1>
-        <p className="lead max-w-3xl mx-auto mb-5 opacity-90 animate-fade-in-up">
+        <p className="lead max-w-3xl mx-auto mb-4 opacity-90 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           Discover the best flight deals and book your next adventure with AeroSwift.
           Seamless booking, unbeatable prices, and world-class service.
         </p>
-        <div className="max-w-4xl mx-auto bg-white p-4 p-md-5 rounded-3 shadow-lg animate-scale-in">
+        <div className="my-5">
+          <p className="fs-5 fst-italic animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            "Millions of travelers trust AeroSwift to find the best flights. Why wait?"
+          </p>
+        </div>
+        <div className="row justify-content-center g-4 mb-5">
+          <div className="col-auto animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <div className="d-flex align-items-center">
+              <div className="p-3 bg-white bg-opacity-25 rounded-circle me-3"><FaDollarSign className="fs-4 text-white" /></div>
+              <span className="fw-bold">Best Prices</span>
+            </div>
+          </div>
+          <div className="col-auto animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <div className="d-flex align-items-center">
+              <div className="p-3 bg-white bg-opacity-25 rounded-circle me-3"><FaGlobe className="fs-4 text-white" /></div>
+              <span className="fw-bold">Global Destinations</span>
+            </div>
+          </div>
+          <div className="col-auto animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <div className="d-flex align-items-center">
+              <div className="p-3 bg-white bg-opacity-25 rounded-circle me-3"><FaHeadset className="fs-4 text-white" /></div>
+              <span className="fw-bold">24/7 Support</span>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto bg-white p-4 p-md-5 rounded-3 shadow-lg animate-scale-in" style={{ animationDelay: '0.7s' }}>
           <SearchForm onSubmit={onSearchSubmit} />
         </div>
         <div className="mt-4">
