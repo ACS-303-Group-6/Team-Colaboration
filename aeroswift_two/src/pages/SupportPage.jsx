@@ -39,13 +39,28 @@ const SupportPage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real application, you would handle the form submission here,
-    // e.g., send the data to a support backend or email service.
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! Our support team will get back to you shortly.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      const response = await fetch('/api/support/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert('Thank you for your message! Our support team will get back to you shortly.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        alert(data.message || 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      alert('Failed to send message. Please check your connection and try again.');
+    }
   };
 
   return (

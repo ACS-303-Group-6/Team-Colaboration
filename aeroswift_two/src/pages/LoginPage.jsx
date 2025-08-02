@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -26,23 +26,51 @@ const LoginPage = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    setErrors({});
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      // --- DIAGNOSTIC LOGGING ---
+      // Let's see exactly what the frontend is receiving.
+      console.log('Login Response Status:', response.status);
+      console.log('Login Response OK:', response.ok);
+      console.log('Login Response Data:', data);
+      // --------------------------
+
+      if (response.ok && data.success) {
+        // DIAGNOSTIC STEP: Temporarily comment out setUser to test navigation.
+        // If this works, the problem is in how the setUser prop is handled in App.jsx.
+        // setUser(data.user); 
+        navigate('/'); // Redirect to homepage on successful login
+      } else {
+        setErrors({ api: data.message || 'Login failed. Please try again.' });
+      }
+    } catch (error) {
+      // This error usually happens if the server is down or if response.json() fails
+      // because the response is not valid JSON (e.g., an HTML error page from a failed proxy).
+      console.error('Fetch API Error:', error);
+      setErrors({ api: 'Cannot connect to the server. The proxy might be misconfigured. Please check your connection and restart the development server.' });
+    } finally {
       setLoading(false);
-      // On successful login
-      navigate('/');
-    }, 1500);
+    }
   };
 
   return (
@@ -58,6 +86,7 @@ const LoginPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
+          {errors.api && <div className="alert alert-danger">{errors.api}</div>}
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <input

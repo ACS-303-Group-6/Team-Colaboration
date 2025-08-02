@@ -41,24 +41,39 @@ const ContactPage = () => {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return; // Stop if validation fails
     if (isSubmitting) return;
-    setIsSubmitting(true);
 
-    // Simulate a network request
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setErrors({}); // Clear previous errors
+
+    try {
+      const response = await fetch('/api/support/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Good practice to keep this consistent
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setIsSubmitted(true);
+        // Reset form after a success message is shown
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormData({ name: '', email: '', subject: '', message: '' });
+        }, 4000);
+      } else {
+        setErrors({ api: data.message || 'Failed to send message. Please try again.' });
+      }
+    } catch (error) {
+      setErrors({ api: 'An error occurred. Please check your connection.' });
+    } finally {
       setIsSubmitting(false);
-      setIsSubmitted(true);
-      setErrors({}); // Clear errors on success
-      
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      }, 4000);
-    }, 1500);
+    }
   };
 
   return (

@@ -42,23 +42,38 @@ const SignupPage = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    setErrors({});
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert('Signup successful! Please log in.');
+        navigate('/login');
+      } else {
+        setErrors({ api: data.message || 'Signup failed. Please try again.' });
+      }
+    } catch (error) {
+      setErrors({ api: 'An error occurred. Please check your connection.' });
+    } finally {
       setLoading(false);
-      // On successful signup
-      navigate('/');
-    }, 1500);
+    }
   };
 
   return (
@@ -74,6 +89,7 @@ const SignupPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
+        {errors.api && <div className="alert alert-danger">{errors.api}</div>}
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
             <input
