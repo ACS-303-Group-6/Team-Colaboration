@@ -6,32 +6,45 @@ import HeroSection from '../components/HeroSection';
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const handleSearchSubmit = async (searchData) => {
+  const handleSearchSubmit = (searchData) => {
+    // Ensure the date is formatted to 'YYYY-MM-DD' string, which the backend expects.
+    // This is a common source of bugs if the date object is sent directly.
+    const formattedDate = new Date(searchData.departureDate).toISOString().split('T')[0];
+
+    // This mapping converts city names to IATA codes. A more robust solution
+    // would involve an API to fetch airports for an autocomplete search form.
+    const cityToIata = {
+      "new york": "JFK",
+      "miami": "MIA",
+      "dallas": "DFW",
+      "san francisco": "SFO",
+      "orlando": "MCO",
+      "denver": "DEN",
+      "london": "LHR",
+      "atlanta": "ATL",
+      "las vegas": "LAS",
+      "boston": "BOS",
+      "tokyo": "HND",
+      "amsterdam": "AMS",
+      "chicago": "ORD",
+      "dubai": "DXB",
+      "singapore": "SIN",
+      "frankfurt": "FRA",
+    };
+
+    const originIata = cityToIata[searchData.from.toLowerCase()] || searchData.from.toUpperCase();
+    const destinationIata = cityToIata[searchData.to.toLowerCase()] || searchData.to.toUpperCase();
+
     // Build query string from the search form data
     const queryParams = new URLSearchParams({
-      origin: searchData.origin,
-      destination: searchData.destination,
-      departureDate: searchData.departureDate,
+      origin: originIata,
+      destination: destinationIata,
+      departureDate: formattedDate,
     }).toString();
 
-    try {
-      // Call your backend search script
-      const response = await fetch(`/api/flights/search?${queryParams}`, {
-        // Include credentials for consistency with our new standardized CORS policy.
-        credentials: 'include',
-      });
-      const data = await response.json();
-
-      if (data.success) {
-        // If successful, navigate to the results page and pass the flight data
-        navigate('/search-results', { state: { flights: data.flights, search: searchData } });
-      } else {
-        alert(data.message || 'No flights found for the selected criteria.');
-      }
-    } catch (error) {
-      console.error('Search failed:', error);
-      alert('An error occurred while searching for flights. Please try again.');
-    }
+    // Navigate to the results page with the search query in the URL.
+    // We also pass the original search data in the state to display user-friendly text.
+    navigate(`/search-results?${queryParams}`, { state: { search: searchData } });
   };
 
   return <HeroSection onSearchSubmit={handleSearchSubmit} />;

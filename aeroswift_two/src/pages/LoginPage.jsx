@@ -1,14 +1,26 @@
 // src/pages/LoginPage.jsx
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext'; // 1. Import the useAuth hook
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-const LoginPage = ({ setUser }) => {
+const LoginPage = () => {
+  const { setUser } = useAuth(); // 2. Get setUser from the AuthContext
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Clear the location state to prevent the message from re-appearing on navigation
+      window.history.replaceState({}, document.title)
+    }
+  }, [location.state]);
 
   const validate = () => {
     const newErrors = {};
@@ -38,36 +50,28 @@ const LoginPage = ({ setUser }) => {
     setLoading(true);
     setErrors({});
 
+    const apiUrl = process.env.REACT_APP_API_URL || '';
+
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
-      // --- DIAGNOSTIC LOGGING ---
-      // Let's see exactly what the frontend is receiving.
-      console.log('Login Response Status:', response.status);
-      console.log('Login Response OK:', response.ok);
-      console.log('Login Response Data:', data);
-      // --------------------------
+      const data = await response.json().catch(() => {
+        throw new Error(`Server returned a non-JSON response (Status: ${response.status})`);
+      });
 
       if (response.ok && data.success) {
-        // DIAGNOSTIC STEP: Temporarily comment out setUser to test navigation.
-        // If this works, the problem is in how the setUser prop is handled in App.jsx.
-        // setUser(data.user); 
+        setUser(data.user); // 3. This will now work correctly
         navigate('/'); // Redirect to homepage on successful login
       } else {
         setErrors({ api: data.message || 'Login failed. Please try again.' });
       }
     } catch (error) {
-      // This error usually happens if the server is down or if response.json() fails
-      // because the response is not valid JSON (e.g., an HTML error page from a failed proxy).
-      console.error('Fetch API Error:', error);
-      setErrors({ api: 'Cannot connect to the server. The proxy might be misconfigured. Please check your connection and restart the development server.' });
+      setErrors({ api: error.message || 'An unexpected error occurred. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -87,6 +91,7 @@ const LoginPage = ({ setUser }) => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           {errors.api && <div className="alert alert-danger">{errors.api}</div>}
+          {successMessage && !errors.api && <div className="alert alert-success">{successMessage}</div>}
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <input

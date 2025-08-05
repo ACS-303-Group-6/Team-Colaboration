@@ -10,11 +10,14 @@ const BookingPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        // The Express session will handle user identification via the cookie.
-        const response = await fetch('http://localhost:4000/api/bookings/', {
-          credentials: 'include', // Important: sends cookies (like the session ID) with the request
+        const apiUrl = process.env.REACT_APP_API_URL || '';
+        const response = await fetch(`${apiUrl}/api/bookings`, {
+          credentials: 'include',
         });
-        const data = await response.json();
+
+        const data = await response.json().catch(() => {
+          throw new Error(`Server returned a non-JSON response (Status: ${response.status})`);
+        });
 
         if (response.ok && data.success) {
           setBookings(data.bookings);
@@ -22,7 +25,7 @@ const BookingPage = () => {
           setError(data.message || 'Failed to fetch bookings.');
         }
       } catch (err) {
-        setError('An error occurred. Please try again later.');
+        setError(err.message || 'An error occurred. Please try again later.');
         console.error('Fetch bookings error:', err);
       } finally {
         setLoading(false);
@@ -54,7 +57,7 @@ const BookingPage = () => {
         <div className="list-group">
           {bookings.map(booking => (
             <div key={booking.booking_id} className="list-group-item mb-3 shadow-sm rounded">
-              <h5 className="mb-1">{booking.airline}: {booking.origin} to {booking.destination}</h5>
+              <h5 className="mb-1">{booking.airline}: {booking.origin_code} to {booking.destination_code}</h5>
               <p className="mb-1">Flight: {booking.flight_number} | Status: <span className={`badge bg-${statusColors[booking.status] || 'secondary'}`}>{booking.status}</span></p>
               <small>Booked on: {new Date(booking.booking_date).toLocaleDateString()}</small>
             </div>

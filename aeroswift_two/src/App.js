@@ -15,10 +15,12 @@ import AboutPage from './pages/AboutPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 
 import './index.css';
+import { AuthProvider } from 'context/AuthContext';
 
 function App() {
   return (
-    <Router>
+    <AuthProvider>
+      <Router>
       <div className="app-container min-h-screen flex flex-col">
         <Navbar />
         <main className="content flex-grow">
@@ -38,6 +40,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

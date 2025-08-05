@@ -54,23 +54,30 @@ const SignupPage = () => {
     setLoading(true);
     setErrors({});
 
+    const apiUrl = process.env.REACT_APP_API_URL || '';
+
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(`${apiUrl}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ name, email, password }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => {
+        throw new Error(`Server returned a non-JSON response (Status: ${response.status})`);
+      });
 
       if (response.ok && data.success) {
-        alert('Signup successful! Please log in.');
-        navigate('/login');
+        // Navigate to the login page with a success message for a better user experience.
+        navigate('/login', { 
+          state: { message: 'Signup successful! You can now log in.' } 
+        });
       } else {
         setErrors({ api: data.message || 'Signup failed. Please try again.' });
       }
     } catch (error) {
-      setErrors({ api: 'An error occurred. Please check your connection.' });
+      setErrors({ api: error.message || 'An unexpected error occurred. Please try again.' });
     } finally {
       setLoading(false);
     }
